@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:travel_buddy_finder/theme/app_theme.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -29,8 +30,8 @@ class _LoginScreenState extends State<LoginScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.blue.shade50,
-              Colors.white,
+              AppTheme.primaryBlue.withOpacity(0.1),
+              AppTheme.backgroundWhite,
             ],
           ),
         ),
@@ -46,24 +47,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   Icon(
                     Icons.travel_explore,
                     size: 80,
-                    color: Colors.blue.shade700,
+                    color: AppTheme.primaryBlue,
                   ),
                   const SizedBox(height: 16),
                   Text(
                     'Welcome Back!',
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue.shade900,
+                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                      color: AppTheme.primaryDarkBlue,
                     ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Continue your travel journey',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.blue.shade700,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: AppTheme.primaryBlue,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -75,9 +73,19 @@ class _LoginScreenState extends State<LoginScreen> {
                       prefixIcon: const Icon(Icons.email_outlined),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppTheme.primaryBlue.withOpacity(0.3)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppTheme.primaryBlue.withOpacity(0.3)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppTheme.primaryBlue),
                       ),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: AppTheme.backgroundWhite,
+                      prefixIconColor: AppTheme.primaryBlue,
                     ),
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
@@ -98,9 +106,19 @@ class _LoginScreenState extends State<LoginScreen> {
                       prefixIcon: const Icon(Icons.lock_outline),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppTheme.primaryBlue.withOpacity(0.3)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppTheme.primaryBlue.withOpacity(0.3)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppTheme.primaryBlue),
                       ),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: AppTheme.backgroundWhite,
+                      prefixIconColor: AppTheme.primaryBlue,
                     ),
                     obscureText: true,
                     validator: (value) {
@@ -117,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         // TODO: Implement forgot password functionality
                       },
                       style: TextButton.styleFrom(
-                        foregroundColor: Colors.blue.shade700,
+                        foregroundColor: AppTheme.primaryBlue,
                       ),
                       child: const Text('Forgot Password?'),
                     ),
@@ -160,8 +178,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               }
                             },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue.shade700,
-                        foregroundColor: Colors.white,
+                        backgroundColor: AppTheme.primaryBlue,
+                        foregroundColor: AppTheme.backgroundWhite,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -192,11 +210,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             Navigator.pushReplacementNamed(context, '/signup');
                           },
                     style: TextButton.styleFrom(
-                      foregroundColor: Colors.blue.shade700,
+                      foregroundColor: AppTheme.primaryBlue,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Don\'t have an account? Sign Up',
-                      style: TextStyle(fontSize: 16),
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   ),
                 ],

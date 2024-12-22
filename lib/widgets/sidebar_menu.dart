@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:travel_buddy_finder/theme/app_theme.dart';
 
 class SidebarMenu extends StatelessWidget {
   final int selectedIndex;
@@ -15,12 +16,22 @@ class SidebarMenu extends StatelessWidget {
     return SizedBox(
       width: 250,
       child: Material(
+        elevation: 2,
         color: Theme.of(context).colorScheme.surface,
         child: Column(
           children: [
             Container(
               padding: const EdgeInsets.all(16.0),
-              color: Theme.of(context).primaryColor,
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
               child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -44,14 +55,14 @@ class SidebarMenu extends StatelessWidget {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  _buildNavItem(0, Icons.home, 'Home'),
-                  _buildNavItem(1, Icons.message, 'Messages'),
-                  _buildNavItem(2, Icons.shopping_bag, 'Marketplace'),
-                  _buildNavItem(3, Icons.map, 'Itinerary'),
-                  _buildNavItem(4, Icons.forum, 'Community Forum'),
-                  _buildNavItem(5, Icons.cloud, 'Weather'),
-                  _buildNavItem(6, Icons.book, 'Journal'),
-                  _buildNavItem(7, Icons.event, 'Events'),
+                  _buildNavItem(context, 0, Icons.explore, 'Home'),
+                  _buildNavItem(context, 1, Icons.chat_bubble, 'Messages'),
+                  _buildNavItem(context, 2, Icons.shopping_bag, 'Marketplace'),
+                  _buildNavItem(context, 3, Icons.map_outlined, 'Itinerary'),
+                  _buildNavItem(context, 4, Icons.groups, 'Community Forum'),
+                  _buildNavItem(context, 5, Icons.wb_sunny, 'Weather'),
+                  _buildNavItem(context, 6, Icons.edit_note, 'Journal'),
+                  _buildNavItem(context, 7, Icons.calendar_month, 'Events'),
                   const Divider(),
                   ListTile(
                     leading: const Icon(Icons.logout),
@@ -95,17 +106,17 @@ class SidebarMenu extends StatelessWidget {
     );
   }
 
-  Widget _buildNavItem(int index, IconData icon, String title) {
+  Widget _buildNavItem(BuildContext context, int index, IconData icon, String title) {
     final isSelected = selectedIndex == index;
     return ListTile(
       leading: Icon(
         icon,
-        color: isSelected ? Colors.blue : null,
+        color: isSelected ? AppTheme.primaryBlue : Colors.grey[600],
       ),
       title: Text(
         title,
         style: TextStyle(
-          color: isSelected ? Colors.blue : null,
+          color: isSelected ? AppTheme.primaryBlue : Colors.grey[600],
           fontWeight: isSelected ? FontWeight.bold : null,
         ),
       ),

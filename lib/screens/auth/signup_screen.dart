@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:travel_buddy_finder/theme/app_theme.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -33,8 +34,8 @@ class _SignupScreenState extends State<SignupScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.blue.shade50,
-              Colors.white,
+              AppTheme.primaryBlue.withOpacity(0.1),
+              AppTheme.backgroundWhite,
             ],
           ),
         ),
@@ -50,24 +51,21 @@ class _SignupScreenState extends State<SignupScreen> {
                   Icon(
                     Icons.travel_explore,
                     size: 80,
-                    color: Colors.blue.shade700,
+                    color: AppTheme.primaryBlue,
                   ),
                   const SizedBox(height: 16),
                   Text(
                     'Join Travel Buddy',
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue.shade900,
+                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                      color: AppTheme.primaryDarkBlue,
                     ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Find your perfect travel companion',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.blue.shade700,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: AppTheme.primaryBlue,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -79,9 +77,19 @@ class _SignupScreenState extends State<SignupScreen> {
                       prefixIcon: const Icon(Icons.person_outline),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppTheme.primaryBlue.withOpacity(0.3)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppTheme.primaryBlue.withOpacity(0.3)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppTheme.primaryBlue),
                       ),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: AppTheme.backgroundWhite,
+                      prefixIconColor: AppTheme.primaryBlue,
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -98,9 +106,19 @@ class _SignupScreenState extends State<SignupScreen> {
                       prefixIcon: const Icon(Icons.email_outlined),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppTheme.primaryBlue.withOpacity(0.3)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppTheme.primaryBlue.withOpacity(0.3)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppTheme.primaryBlue),
                       ),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: AppTheme.backgroundWhite,
+                      prefixIconColor: AppTheme.primaryBlue,
                     ),
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
@@ -121,9 +139,19 @@ class _SignupScreenState extends State<SignupScreen> {
                       prefixIcon: const Icon(Icons.lock_outline),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppTheme.primaryBlue.withOpacity(0.3)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppTheme.primaryBlue.withOpacity(0.3)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppTheme.primaryBlue),
                       ),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: AppTheme.backgroundWhite,
+                      prefixIconColor: AppTheme.primaryBlue,
                     ),
                     obscureText: true,
                     validator: (value) {
@@ -144,9 +172,19 @@ class _SignupScreenState extends State<SignupScreen> {
                       prefixIcon: const Icon(Icons.lock_outline),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppTheme.primaryBlue.withOpacity(0.3)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppTheme.primaryBlue.withOpacity(0.3)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppTheme.primaryBlue),
                       ),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: AppTheme.backgroundWhite,
+                      prefixIconColor: AppTheme.primaryBlue,
                     ),
                     obscureText: true,
                     validator: (value) {
@@ -193,8 +231,8 @@ class _SignupScreenState extends State<SignupScreen> {
                               }
                             },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue.shade700,
-                        foregroundColor: Colors.white,
+                        backgroundColor: AppTheme.primaryBlue,
+                        foregroundColor: AppTheme.backgroundWhite,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -225,11 +263,11 @@ class _SignupScreenState extends State<SignupScreen> {
                             Navigator.pushReplacementNamed(context, '/login');
                           },
                     style: TextButton.styleFrom(
-                      foregroundColor: Colors.blue.shade700,
+                      foregroundColor: AppTheme.primaryBlue,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Already have an account? Log In',
-                      style: TextStyle(fontSize: 16),
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   ),
                 ],
