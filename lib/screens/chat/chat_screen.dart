@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../models/message.dart';
 import '../../theme/app_theme.dart';
+import '../../providers/message_provider.dart';
 
 class ChatScreen extends StatefulWidget {
   final Conversation conversation;
@@ -20,34 +22,28 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   
-  // Mock messages for demonstration
-  final List<Message> mockMessages = [
-    Message(
-      id: 'm1',
-      senderId: 'user1',
-      receiverId: 'currentUser',
-      content: 'Hey! Are you planning to visit Paris?',
-      timestamp: DateTime.now().subtract(const Duration(days: 1)),
-    ),
-    Message(
-      id: 'm2',
-      senderId: 'currentUser',
-      receiverId: 'user1',
-      content: 'Yes! I\'ll be there next week. Would love to meet up!',
-      timestamp: DateTime.now().subtract(const Duration(hours: 12)),
-    ),
-    Message(
-      id: 'm3',
-      senderId: 'user1',
-      receiverId: 'currentUser',
-      content: 'That\'s great! Let\'s plan something together.',
-      timestamp: DateTime.now().subtract(const Duration(hours: 1)),
-    ),
-    // TODO: Replace with real-time messages from backend
-  ];
+  @override
+  void initState() {
+    super.initState();
+    // Mark all messages as read when chat is opened
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final messageProvider = context.read<MessageProvider>();
+      for (final message in widget.conversation.messages) {
+        messageProvider.markMessageAsRead(message.id);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final messages = widget.conversation.messages;
+    final systemMessage = messages.isNotEmpty && messages.first.senderId == 'system' 
+        ? messages.first 
+        : null;
+    final regularMessages = systemMessage != null 
+        ? messages.sublist(1) 
+        : messages;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -82,18 +78,47 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              padding: const EdgeInsets.all(16),
-              itemCount: mockMessages.length,
-              itemBuilder: (context, index) {
-                final message = mockMessages[index];
-                final isCurrentUser = message.senderId == 'currentUser';
-                return MessageBubble(
-                  message: message,
-                  isCurrentUser: isCurrentUser,
-                );
-              },
+            child: Stack(
+              children: [
+                ListView.builder(
+                  controller: _scrollController,
+                  padding: EdgeInsets.only(
+                    top: systemMessage != null ? 140 : 16,
+                    left: 16,
+                    right: 16,
+                    bottom: 16,
+                  ),
+                  itemCount: regularMessages.length,
+                  itemBuilder: (context, index) {
+                    final message = regularMessages[index];
+                    final isCurrentUser = message.senderId == 'currentUser';
+                    return MessageBubble(
+                      message: message,
+                      isCurrentUser: isCurrentUser,
+                    );
+                  },
+                ),
+                if (systemMessage != null)
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      transform: Matrix4.translationValues(
+                        0,
+                        regularMessages.isEmpty ? 40 : 0,
+                        0,
+                      ),
+                      child: Container(
+                        color: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: SystemMessageBubble(message: systemMessage),
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ),
           _buildMessageInput(),
@@ -155,17 +180,21 @@ class _ChatScreenState extends State<ChatScreen> {
   void _sendMessage() {
     if (_messageController.text.trim().isEmpty) return;
 
-    // TODO: Implement real-time message sending
     setState(() {
-      mockMessages.add(
-        Message(
-          id: DateTime.now().toString(),
-          senderId: 'currentUser',
-          receiverId: widget.conversation.userId,
-          content: _messageController.text.trim(),
-          timestamp: DateTime.now(),
-        ),
+      final newMessage = Message(
+        id: DateTime.now().toString(),
+        senderId: 'currentUser',
+        receiverId: widget.conversation.userId,
+        content: _messageController.text.trim(),
+        timestamp: DateTime.now(),
+        isRead: true, // Messages sent by current user are already read
       );
+      
+      // Add message to conversation
+      widget.conversation.messages.add(newMessage);
+      
+      // Add message to provider
+      context.read<MessageProvider>().addMessage(newMessage);
     });
 
     _messageController.clear();
@@ -181,6 +210,61 @@ class _ChatScreenState extends State<ChatScreen> {
     _messageController.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+}
+
+class SystemMessageBubble extends StatelessWidget {
+  final Message message;
+
+  const SystemMessageBubble({
+    Key? key,
+    required this.message,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      decoration: BoxDecoration(
+        color: AppTheme.primaryBlue.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppTheme.primaryBlue.withOpacity(0.2),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppTheme.primaryBlue.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.celebration_rounded,
+              color: AppTheme.primaryBlue,
+              size: 32,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            message.content,
+            style: TextStyle(
+              fontStyle: FontStyle.italic,
+              color: AppTheme.primaryBlue,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              height: 1.4,
+              letterSpacing: 0.3,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
   }
 }
 

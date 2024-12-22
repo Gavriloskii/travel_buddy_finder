@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:travel_buddy_finder/screens/auth/login_screen.dart';
 import 'package:travel_buddy_finder/screens/auth/signup_screen.dart';
 import 'package:travel_buddy_finder/screens/home/home_screen.dart';
 import 'package:travel_buddy_finder/theme/app_theme.dart';
+import 'package:travel_buddy_finder/providers/message_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +15,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return ChangeNotifierProvider(
+      create: (_) => MessageProvider(),
+      child: MaterialApp(
       title: 'Travel Buddy Finder',
       theme: AppTheme.lightTheme,
       debugShowCheckedModeBanner: false,
@@ -23,6 +27,7 @@ class MyApp extends StatelessWidget {
         '/signup': (context) => const SignupScreen(),
         '/home': (context) => const HomeScreen(),
       },
+      ),
     );
   }
 }

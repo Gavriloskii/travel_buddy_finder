@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:travel_buddy_finder/theme/app_theme.dart';
+import 'package:travel_buddy_finder/providers/message_provider.dart';
 
 class SidebarMenu extends StatelessWidget {
   final int selectedIndex;
@@ -12,9 +14,10 @@ class SidebarMenu extends StatelessWidget {
   });
 
   Widget _buildMenuContent(BuildContext context, {bool isCompact = false}) {
+    final unreadCount = context.watch<MessageProvider>().unreadCount;
     final menuItems = [
       _MenuItem(0, Icons.explore, 'Home'),
-      _MenuItem(1, Icons.chat_bubble, 'Messages'),
+      _MenuItem(1, Icons.chat_bubble, 'Messages', badge: unreadCount > 0 ? unreadCount : null),
       _MenuItem(2, Icons.shopping_bag, 'Marketplace'),
       _MenuItem(3, Icons.map_outlined, 'Itinerary'),
       _MenuItem(4, Icons.groups, 'Community'),
@@ -96,14 +99,43 @@ class SidebarMenu extends StatelessWidget {
                                 ),
                               ),
                             ),
-                          Center(
-                            child: Icon(
-                              item.icon,
-                              color: selectedIndex == item.index 
-                                  ? AppTheme.primaryBlue 
-                                  : Colors.grey[600],
-                              size: 24,
-                            ),
+                          Stack(
+                            children: [
+                              Center(
+                                child: Icon(
+                                  item.icon,
+                                  color: selectedIndex == item.index 
+                                      ? AppTheme.primaryBlue 
+                                      : Colors.grey[600],
+                                  size: 24,
+                                ),
+                              ),
+                              if (item.badge != null)
+                                Positioned(
+                                  right: 0,
+                                  top: 0,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    constraints: const BoxConstraints(
+                                      minWidth: 20,
+                                      minHeight: 20,
+                                    ),
+                                    child: Text(
+                                      '${item.badge}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                            ],
                           ),
                         ],
                       ),
@@ -240,9 +272,38 @@ class SidebarMenu extends StatelessWidget {
     final isSelected = selectedIndex == item.index;
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      leading: Icon(
-        item.icon,
-        color: isSelected ? AppTheme.primaryBlue : Colors.grey[600],
+      leading: Stack(
+        children: [
+          Icon(
+            item.icon,
+            color: isSelected ? AppTheme.primaryBlue : Colors.grey[600],
+          ),
+          if (item.badge != null)
+            Positioned(
+              right: -4,
+              top: -4,
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                constraints: const BoxConstraints(
+                  minWidth: 20,
+                  minHeight: 20,
+                ),
+                child: Text(
+                  '${item.badge}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+        ],
       ),
       title: Text(
         item.title,
@@ -297,6 +358,7 @@ class _MenuItem {
   final int index;
   final IconData icon;
   final String title;
+  final int? badge;
 
-  const _MenuItem(this.index, this.icon, this.title);
+  const _MenuItem(this.index, this.icon, this.title, {this.badge});
 }

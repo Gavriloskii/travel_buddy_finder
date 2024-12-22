@@ -82,42 +82,71 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     if (_profiles.isEmpty || _isPageAnimating) return;
     
     final currentProfile = _profiles[_currentProfileIndex];
-    final isMatch = await MatchResult.checkForMatch(currentProfile.id);
     
-    if (mounted) {
+    // Add like and check for match
+    final matchResult = await MatchResult.addLike(
+      'currentUser', // TODO: Replace with actual user ID
+      currentProfile,
+      (matchedProfile) {
+        // This callback is called when there's a mutual match
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  const Icon(Icons.celebration, color: Colors.white),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'It\'s a match with ${matchedProfile.name}! 🎉',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+              duration: const Duration(seconds: 4),
+              backgroundColor: Colors.purple,
+              behavior: SnackBarBehavior.floating,
+              width: MediaQuery.of(context).size.width < 600 ? null : 400,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              action: SnackBarAction(
+                label: 'Send Message',
+                textColor: Colors.white,
+                onPressed: () {
+                  setState(() => _selectedIndex = 1);
+                },
+              ),
+            ),
+          );
+        }
+      },
+    );
+
+    // Show like notification if no match
+    if (!matchResult.isMatch && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Row(
             children: [
-              Icon(
-                isMatch ? Icons.celebration : Icons.favorite,
-                color: Colors.white
-              ),
+              const Icon(Icons.favorite, color: Colors.white),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  isMatch
-                      ? 'It\'s a match with ${currentProfile.name}! 🎉'
-                      : 'You liked ${currentProfile.name}! ✨',
+                  'You liked ${currentProfile.name}! ✨',
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
           ),
-          duration: Duration(seconds: isMatch ? 4 : 2),
-          backgroundColor: isMatch ? Colors.purple : AppTheme.palmGreen,
+          duration: const Duration(seconds: 2),
+          backgroundColor: AppTheme.palmGreen,
           behavior: SnackBarBehavior.floating,
           width: MediaQuery.of(context).size.width < 600 ? null : 400,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          action: isMatch ? SnackBarAction(
-            label: 'Send Message',
-            textColor: Colors.white,
-            onPressed: () {
-              setState(() => _selectedIndex = 1);
-            },
-          ) : null,
         ),
       );
     }
