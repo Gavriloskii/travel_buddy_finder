@@ -90,180 +90,203 @@ class _UserProfileCardState extends State<UserProfileCard> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: _onTapDown,
-      onTapUp: _onTapUp,
-      onTapCancel: _onTapCancel,
-      child: AnimatedBuilder(
-        animation: _controller,
-        builder: (context, child) {
-          return Transform.scale(
-            scale: _scaleAnimation.value,
-            child: Transform.rotate(
-              angle: _rotationAnimation.value,
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                height: MediaQuery.of(context).size.height * 0.7,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 12,
-                      spreadRadius: 3,
-                      offset: const Offset(0, 4),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isSmallScreen = constraints.maxWidth < 600;
+        final horizontalMargin = isSmallScreen ? 12.0 : 24.0;
+        final verticalMargin = isSmallScreen ? 8.0 : 16.0;
+        final bottomPadding = isSmallScreen ? 16.0 : 24.0;
+        final overlayIconSize = isSmallScreen ? 80.0 : 120.0;
+        
+        return GestureDetector(
+          onTapDown: _onTapDown,
+          onTapUp: _onTapUp,
+          onTapCancel: _onTapCancel,
+          child: AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              return Transform.scale(
+                scale: _scaleAnimation.value,
+                child: Transform.rotate(
+                  angle: _rotationAnimation.value,
+                  child: Container(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: horizontalMargin,
+                      vertical: verticalMargin,
                     ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      // Profile Image
-                      widget.profile.photoUrl.startsWith('http')
-                          ? Image.network(
-                              widget.profile.photoUrl,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) => Container(
-                                color: AppTheme.primaryBlue.withOpacity(0.1),
+                    height: MediaQuery.of(context).size.height * (isSmallScreen ? 0.6 : 0.7),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 12,
+                          spreadRadius: 3,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          // Profile Image
+                          widget.profile.photoUrl.startsWith('http')
+                              ? Image.network(
+                                  widget.profile.photoUrl,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) => Container(
+                                    color: AppTheme.primaryBlue.withOpacity(0.1),
+                                    child: Icon(
+                                      Icons.travel_explore,
+                                      size: isSmallScreen ? 60 : 100,
+                                      color: AppTheme.primaryBlue.withOpacity(0.5),
+                                    ),
+                                  ),
+                                )
+                              : Container(
+                                  color: AppTheme.primaryBlue.withOpacity(0.1),
+                                  child: Icon(
+                                    Icons.travel_explore,
+                                    size: isSmallScreen ? 60 : 100,
+                                    color: AppTheme.primaryBlue.withOpacity(0.5),
+                                  ),
+                                ),
+                          // Gradient Overlay
+                          Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.transparent,
+                                  Colors.black.withOpacity(0.7),
+                                ],
+                                stops: const [0.4, 1.0],
+                              ),
+                            ),
+                          ),
+                          // Like/Dislike Overlays
+                          if (_showLikeOverlay)
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.green.withOpacity(0.3),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Center(
                                 child: Icon(
-                                  Icons.travel_explore,
-                                  size: 100,
-                                  color: AppTheme.primaryBlue.withOpacity(0.5),
+                                  Icons.favorite,
+                                  color: Colors.white,
+                                  size: overlayIconSize,
                                 ),
                               ),
-                            )
-                          : Container(
-                              color: AppTheme.primaryBlue.withOpacity(0.1),
-                              child: Icon(
-                                Icons.travel_explore,
-                                size: 100,
-                                color: AppTheme.primaryBlue.withOpacity(0.5),
+                            ),
+                          if (_showDislikeOverlay)
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.red.withOpacity(0.3),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.close,
+                                  color: Colors.white,
+                                  size: overlayIconSize,
+                                ),
                               ),
                             ),
-                      // Gradient Overlay
-                      Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.transparent,
-                              Colors.black.withOpacity(0.7),
-                            ],
-                            stops: const [0.4, 1.0],
-                          ),
-                        ),
-                      ),
-                      // Like/Dislike Overlays
-                      if (_showLikeOverlay)
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.green.withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.favorite,
-                              color: Colors.white,
-                              size: 120,
-                            ),
-                          ),
-                        ),
-                      if (_showDislikeOverlay)
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.red.withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.close,
-                              color: Colors.white,
-                              size: 120,
-                            ),
-                          ),
-                        ),
-                      // Profile Info
-                      Positioned(
-                        left: 24,
-                        right: 24,
-                        bottom: 24,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          // Profile Info
+                          Positioned(
+                            left: horizontalMargin,
+                            right: horizontalMargin,
+                            bottom: bottomPadding,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Expanded(
-                                  child: Text(
-                                    '${widget.profile.name}, ${widget.profile.age}',
-                                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        '${widget.profile.name}, ${widget.profile.age}',
+                                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: isSmallScreen ? 20 : 24,
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: isSmallScreen ? 8 : 12,
+                                        vertical: isSmallScreen ? 4 : 6,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: AppTheme.primaryBlue.withOpacity(0.8),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Text(
+                                        widget.profile.personalityType,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: isSmallScreen ? 12 : 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                  decoration: BoxDecoration(
-                                    color: AppTheme.primaryBlue.withOpacity(0.8),
-                                    borderRadius: BorderRadius.circular(20),
+                                SizedBox(height: isSmallScreen ? 8 : 16),
+                                Text(
+                                  widget.profile.bio,
+                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    color: Colors.white.withOpacity(0.9),
+                                    fontSize: isSmallScreen ? 14 : 16,
                                   ),
-                                  child: Text(
-                                    widget.profile.personalityType,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
+                                  maxLines: isSmallScreen ? 2 : 3,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: isSmallScreen ? 12 : 20),
+                                Wrap(
+                                  spacing: isSmallScreen ? 6 : 10,
+                                  runSpacing: isSmallScreen ? 6 : 10,
+                                  children: widget.profile.interests.map((interest) => Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: isSmallScreen ? 8 : 12,
+                                      vertical: isSmallScreen ? 4 : 6,
                                     ),
-                                  ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.2),
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                        color: Colors.white.withOpacity(0.3),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      interest,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: isSmallScreen ? 12 : 14,
+                                      ),
+                                    ),
+                                  )).toList(),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 16),
-                            Text(
-                              widget.profile.bio,
-                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                color: Colors.white.withOpacity(0.9),
-                              ),
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 20),
-                            Wrap(
-                              spacing: 10,
-                              runSpacing: 10,
-                              children: widget.profile.interests.map((interest) => Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
-                                    color: Colors.white.withOpacity(0.3),
-                                  ),
-                                ),
-                                child: Text(
-                                  interest,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              )).toList(),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ),
-          );
-        },
-      ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
