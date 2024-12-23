@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travel_buddy_finder/theme/app_theme.dart';
+import 'package:travel_buddy_finder/widgets/badge.dart'; // Import CustomBadge
 import 'package:travel_buddy_finder/providers/message_provider.dart';
 
 class SidebarMenu extends StatelessWidget {
@@ -111,28 +112,14 @@ class SidebarMenu extends StatelessWidget {
                                 ),
                               ),
                               if (item.badge != null)
-                                Positioned(
-                                  right: 0,
-                                  top: 0,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(4),
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    constraints: const BoxConstraints(
-                                      minWidth: 20,
-                                      minHeight: 20,
-                                    ),
-                                    child: Text(
-                                      '${item.badge}',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
+                                CustomBadge(
+                                  count: item.badge!,
+                                  child: Icon(
+                                    item.icon,
+                                    color: selectedIndex == item.index 
+                                        ? AppTheme.primaryBlue 
+                                        : Colors.grey[600],
+                                    size: 24,
                                   ),
                                 ),
                             ],

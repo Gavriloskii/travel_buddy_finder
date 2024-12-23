@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:travel_buddy_finder/theme/app_theme.dart';
 import '../models/user_profile.dart';
+import 'overlay_indicator.dart'; // Importing OverlayIndicator
 
 class UserProfileCard extends StatefulWidget {
   final UserProfile profile;
@@ -168,34 +169,18 @@ class _UserProfileCardState extends State<UserProfileCard> with SingleTickerProv
                             ),
                           ),
                           // Like/Dislike Overlays
-                          if (_showLikeOverlay)
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.green.withOpacity(0.3),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Center(
-                                child: Icon(
-                                  Icons.favorite,
-                                  color: Colors.white,
-                                  size: overlayIconSize,
-                                ),
-                              ),
-                            ),
-                          if (_showDislikeOverlay)
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.red.withOpacity(0.3),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Center(
-                                child: Icon(
-                                  Icons.close,
-                                  color: Colors.white,
-                                  size: overlayIconSize,
-                                ),
-                              ),
-                            ),
+                          OverlayIndicator(
+                            isVisible: _showLikeOverlay,
+                            icon: Icons.favorite,
+                            color: Colors.green,
+                            size: overlayIconSize,
+                          ),
+                          OverlayIndicator(
+                            isVisible: _showDislikeOverlay,
+                            icon: Icons.close,
+                            color: Colors.red,
+                            size: overlayIconSize,
+                          ),
                           // Profile Info
                           Positioned(
                             left: horizontalMargin,
