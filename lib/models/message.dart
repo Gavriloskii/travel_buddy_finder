@@ -1,4 +1,5 @@
 import 'package:travel_buddy_finder/models/user_profile.dart';
+import 'package:travel_buddy_finder/utils/message_utils.dart';
 
 class Message {
   final String id;

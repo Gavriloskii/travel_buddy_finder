@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-class OverlayIndicator extends StatelessWidget {
+  /// A widget that displays an overlay indicator with an icon.
+  class OverlayIndicator extends StatelessWidget {
   final bool isVisible;
   final IconData icon;
   final Color color;

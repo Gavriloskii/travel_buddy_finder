@@ -51,10 +51,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   }
 
   Future<void> _loadProfiles() async {
-    setState(() {
-      _isLoading = true;
-      _loadingMessage = 'Loading travel buddies...';
-    });
+    // Set loading state to true and update loading message
+    _isLoading = true;
+    _loadingMessage = 'Loading travel buddies...';
+    setState(() {}); // Call setState once
 
     try {
       // TODO: Replace with actual API call
@@ -321,19 +321,17 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           _currentProfileIndex = index;
                         });
                       },
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: constraints.maxWidth < 600 ? 8 : 16,
-                            vertical: constraints.maxWidth < 600 ? 8 : 16,
-                          ),
-                          child: UserProfileCard(
-                            profile: _profiles[index],
-                            onLike: _handleLike,
-                            onDislike: _handleDislike,
-                          ),
-                        );
-                      },
+                      itemBuilder: (context, index) => Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: constraints.maxWidth < 600 ? 8 : 16,
+                          vertical: constraints.maxWidth < 600 ? 8 : 16,
+                        ),
+                        child: UserProfileCard(
+                          profile: _profiles[index],
+                          onLike: _handleLike,
+                          onDislike: _handleDislike,
+                        ),
+                      ),
                     ),
         ),
         if (!isLastProfile) _buildActionButtons(constraints),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travel_buddy_finder/screens/auth/login_screen.dart';
+import 'package:travel_buddy_finder/screens/counter_screen.dart';
 import 'package:travel_buddy_finder/screens/auth/signup_screen.dart';
 import 'package:travel_buddy_finder/screens/home/home_screen.dart';
 import 'package:travel_buddy_finder/theme/app_theme.dart';
@@ -21,8 +22,9 @@ class MyApp extends StatelessWidget {
       title: 'Travel Buddy Finder',
       theme: AppTheme.lightTheme,
       debugShowCheckedModeBanner: false,
-      initialRoute: '/home', // TODO: Change back to '/login' after testing
+      initialRoute: '/home', // Set to home for launch
       routes: {
+        '/counter': (context) => const CounterScreen(),
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignupScreen(),
         '/home': (context) => const HomeScreen(),

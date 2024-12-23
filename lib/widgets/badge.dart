@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CustomBadge extends StatelessWidget {
+  /// A widget that displays a badge with a count on top of a child widget.
+  class CustomBadge extends StatelessWidget {
   final int? count;
   final Widget child;
 

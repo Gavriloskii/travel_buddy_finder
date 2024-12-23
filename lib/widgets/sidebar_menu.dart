@@ -4,7 +4,8 @@ import 'package:travel_buddy_finder/theme/app_theme.dart';
 import 'package:travel_buddy_finder/widgets/badge.dart'; // Import CustomBadge
 import 'package:travel_buddy_finder/providers/message_provider.dart';
 
-class SidebarMenu extends StatelessWidget {
+  /// A widget that displays a sidebar menu for navigation.
+  class SidebarMenu extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onItemSelected;
 
